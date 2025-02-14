@@ -207,7 +207,7 @@ export class CotizarComponent {
       alert('No hay información del vehículo.');
       return;
     }
-
+  
     const storedData = localStorage.getItem('orderData');
     let selectedColor: any;
     if (storedData) {
@@ -216,7 +216,7 @@ export class CotizarComponent {
         selectedColor = parsedData.selectedColor;
       }
     }
-
+  
     const sale: Sale = {
       usuarioID: this.auth.getUserInfo().sub,
       vehiculo: {
@@ -243,7 +243,7 @@ export class CotizarComponent {
       status: 'pendiente',
       date: new Date()
     };
-
+  
     if (this.metodoPago === 'financiado') {
       sale.financingDetails = {
         cuotas: this.selectedCuota,
@@ -256,7 +256,7 @@ export class CotizarComponent {
     } else {
       sale.totalContado = this.totalContado;
     }
-
+  
     this.saleService.createSale(sale).subscribe({
       next: (res) => {
         console.log('Venta registrada con éxito', res);
@@ -264,6 +264,8 @@ export class CotizarComponent {
         const parsedData = JSON.parse(storedData!);
         console.log(parsedData);
         console.log(this.car!);
+  
+        // Actualizar stock del color del vehículo
         const newColorStock = parsedData.selectedColor.stock - 1;
         this.carService.updateCarColorStock(this.car?._id!, parsedData.selectedColor, newColorStock, this.car?.colors!).subscribe({
           next: (updatedCar) => {
@@ -271,14 +273,184 @@ export class CotizarComponent {
           },
           error: (err) => console.error('Error actualizando stock del vehículo', err)
         });
-
+  
+        // Actualizar stock de accesorios
         this.selectedAccessories.forEach((accessory) => {
           const newAccessoryStock = accessory.stock - 1;
           this.accesoriosService.updateAccessory(accessory._id, newAccessoryStock).subscribe({
-            next: (updatedAccessory) => console.log(`Stock actualizado para el accesorio ${accessory.name}`, updatedAccessory),
+            next: (updatedAccessory) => console.log(`Stock actualizado para el accesorio ${accessory.name}, updatedAccessory`),
             error: (err) => console.error(`Error actualizando stock para el accesorio ${accessory.name}`, err)
           });
         });
+  
+        // Generar y enviar factura por correo
+        const userInfo = this.auth.getUserInfo();
+        const facturaHTML = `
+                  <!DOCTYPE html>
+                  <html>
+                  <head>
+                    <meta charset="UTF-8">
+                    <style>
+                      /* El CSS se incluye en línea para compatibilidad con clientes de correo */
+                    </style>
+                  </head>
+                  <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
+                    <div style="border: 1px solid #ddd; padding: 20px; border-radius: 5px;">
+                      <!-- Encabezado -->
+                      <div style="text-align: center; border-bottom: 2px solid #002855; padding-bottom: 20px; margin-bottom: 20px;">
+                        <h1 style="color: #002855; margin: 0;">FACTURA</h1>
+                        <p style="color: #666; margin: 5px 0;">Concesionario AutoShop</p>
+                      </div>
+
+                      <!-- Información de la factura -->
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                        <div>
+                          <h3 style="color: #002855; margin: 0;">Información del Cliente</h3>
+                          <p style="margin: 5px 0;"><strong>Cliente:</strong> ${userInfo.name}</p>
+                          <p style="margin: 5px 0;"><strong>Email:</strong> ${userInfo.email}</p>
+                          <p style="margin: 5px 0;"><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        <div style="text-align: right;">
+                          <p style="margin: 5px 0;"><strong>Factura #:</strong> ${res._id?.slice(-6).toUpperCase()}</p>
+                          <p style="margin: 5px 0;"><strong>Estado:</strong> <span style="color: #28a745;">PAGADO</span></p>
+                        </div>
+                      </div>
+
+                      <!-- Detalles del Vehículo -->
+                      <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        <h3 style="color: #002855; margin: 0 0 10px 0;">Detalles del Vehículo</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                          <tr>
+                            <td style="padding: 8px 0;"><strong>Marca:</strong></td>
+                            <td style="padding: 8px 0;">${this.car!.brand}</td>
+                            <td style="padding: 8px 0;"><strong>Modelo:</strong></td>
+                            <td style="padding: 8px 0;">${this.car!.car_model}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0;"><strong>Color:</strong></td>
+                            <td style="padding: 8px 0;">${selectedColor.name}</td>
+                            <td style="padding: 8px 0;"><strong>Precio Base:</strong></td>
+                            <td style="padding: 8px 0;">$${this.car!.price.toLocaleString()}</td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      ${this.selectedAccessories.length > 0 ? `
+                      <!-- Accesorios -->
+                      <div style="margin-bottom: 20px;">
+                        <h3 style="color: #002855; margin: 0 0 10px 0;">Accesorios Seleccionados</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                          <thead>
+                            <tr style="background-color: #f8f9fa;">
+                              <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd;">Accesorio</th>
+                              <th style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">Precio</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            ${this.selectedAccessories.map(acc => `
+                              <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${acc.name}</td>
+                                <td style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd;">$${acc.price.toLocaleString()}</td>
+                              </tr>
+                            `).join('')}
+                            <tr>
+                              <td style="padding: 8px; text-align: right;"><strong>Total Accesorios:</strong></td>
+                              <td style="text-align: right; padding: 8px;">$${this.totalAccesorios.toLocaleString()}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      ` : ''}
+
+                      <!-- Detalles de Pago -->
+                      <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        <h3 style="color: #002855; margin: 0 0 10px 0;">Detalles de Pago</h3>
+                        ${this.metodoPago === 'contado' ? `
+                          <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Método de Pago:</strong></td>
+                              <td style="text-align: right;">Contado</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Precio Vehículo:</strong></td>
+                              <td style="text-align: right;">$${this.car!.price.toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Total Accesorios:</strong></td>
+                              <td style="text-align: right;">$${this.totalAccesorios.toLocaleString()}</td>
+                            </tr>
+                            <tr style="font-size: 1.2em;">
+                              <td style="padding: 8px 0;"><strong>Total:</strong></td>
+                              <td style="text-align: right;"><strong>$${this.totalContado.toLocaleString()}</strong></td>
+                            </tr>
+                          </table>
+                        ` : `
+                          <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Método de Pago:</strong></td>
+                              <td style="text-align: right;">Financiado</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Entrada:</strong></td>
+                              <td style="text-align: right;">$${this.customEntrada.toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Número de Cuotas:</strong></td>
+                              <td style="text-align: right;">${this.selectedCuota}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Cuota Mensual:</strong></td>
+                              <td style="text-align: right;">$${this.cuotaMensual.toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 8px 0;"><strong>Seguro Mensual:</strong></td>
+                              <td style="text-align: right;">$${this.seguroMensual.toLocaleString()}</td>
+                            </tr>
+                            <tr style="font-size: 1.2em;">
+                              <td style="padding: 8px 0;"><strong>Total Mensual:</strong></td>
+                              <td style="text-align: right;"><strong>$${this.totalMensual.toLocaleString()}</strong></td>
+                            </tr>
+                          </table>
+                        `}
+                      </div>
+
+                      <!-- Forma de Pago -->
+                      <div style="margin-bottom: 20px;">
+                        <h3 style="color: #002855; margin: 0 0 10px 0;">Forma de Pago</h3>
+                        <p style="margin: 5px 0;"><strong>Método:</strong> ${this.formaPago === 'tarjeta' ? 'Tarjeta de Crédito' : 'Efectivo'}</p>
+                        ${this.formaPago === 'tarjeta' ? `
+                          <p style="margin: 5px 0;"><strong>Titular:</strong> ${this.tarjetaForm.nombre}</p>
+                          <p style="margin: 5px 0;"><strong>Número de Tarjeta:</strong> **${this.tarjetaForm.numero.slice(-4)}</p>
+                        ` : ''}
+                      </div>
+
+                      <!-- Pie de página -->
+                      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666;">
+                        <p style="margin: 5px 0;">Gracias por su compra</p>
+                        <p style="margin: 5px 0;">AutoShop - Concesionario Oficial</p>
+                        <p style="margin: 5px 0; font-size: 12px;">Este documento es un comprobante oficial de su compra.</p>
+                        <p style="margin: 5px 0; font-size: 12px;">Por favor, consérvelo para futura referencia.</p>
+                      </div>
+                    </div>
+                  </body>
+                  </html>
+                  `;
+  
+        // Enviar el correo
+        this.saleService.enviarCorreo(
+          userInfo.email,
+          'Factura de su compra de vehículo',
+          facturaHTML
+        ).subscribe({
+          next: (emailRes) => {
+            console.log('Correo enviado exitosamente', emailRes);
+          },
+          error: (err) => {
+            console.error('Error al enviar el correo', err);
+          }
+        });
+  
+        // Mostrar mensaje de éxito
         Swal.fire({
           title: 'Compra realizada!',
           text: '¿Desea ir a la colección o permanecer aquí?',
@@ -289,11 +461,9 @@ export class CotizarComponent {
           reverseButtons: true
         }).then((result) => {
           if (result.isConfirmed) {
-            // Redirige a /coleccion
             this.clearForm();
             this.router.navigate(['/coleccion']);
           } else {
-            // El usuario prefiere permanecer; aquí puedes ejecutar otra acción si es necesario
             console.log('El usuario decidió permanecer en la página.');
           }
         });

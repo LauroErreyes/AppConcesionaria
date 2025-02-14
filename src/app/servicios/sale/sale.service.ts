@@ -1,6 +1,6 @@
 // src/servicios/sales/sale.service.ts
 
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -13,6 +13,8 @@ export class SaleService {
   private url = 'appluxemotors-production.up.railway.app';
   //private url = 'localhost:3000';
   private apiUrl = `https://${this.url}/sales`;
+  private urlEmail = 'apicorreos-production.up.railway.app';
+  private emailApiUrl = `https://${this.urlEmail}/enviar-correo`; // subir luego a host
 
   constructor(private http: HttpClient) { }
 
@@ -48,5 +50,22 @@ export class SaleService {
       errorMessage = `Error del servidor: ${error.status}`;
     }
     return throwError(() => new Error(errorMessage));
+  }
+  enviarCorreo(
+    correo: string,
+    subject: string,
+    mensaje: string
+  ): Observable<any> {
+    const emailData = {
+      correo: correo,
+      subject: subject,
+      mensaje: mensaje,
+    };
+
+    console.log('Enviando correo con estos datos:', emailData);
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post(this.emailApiUrl, emailData, { headers });
   }
 }
