@@ -1,0 +1,90 @@
+.modelo-3d-container {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.canvas-container {
+  width: 100%;
+  height: 800px; /* Aumentado de 600px a 800px */
+  background-color: transparent;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  font-size: 1.25rem; /* Texto más grande para el loader */
+}
+
+.no-model-message {
+  width: 100%;
+  height: 800px; /* Ajustado para coincidir con canvas-container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f8f8;
+  color: #666;
+  font-size: 1.5rem; /* Texto más grande */
+  text-align: center;
+  border: 2px dashed #ddd;
+  border-radius: 0.5rem;
+}
+
+.no-model-message .content {
+  max-width: 80%;
+  padding: 2rem;
+}
+
+.no-model-icon {
+  font-size: 4rem; /* Icono más grande */
+  margin-bottom: 1.5rem;
+  color: #999;
+}
+
+.model-button {
+  background-color: #3b82f6;
+  color: white;
+  padding: 1rem 2rem; /* Botón más grande */
+  border-radius: 9999px;
+  font-size: 1.2rem; /* Texto del botón más grande */
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.model-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.model-button.active {
+  background-color: #dc2626;
+}
+
+.model-button.active:hover {
+  background-color: #b91c1c;
+}
+
+.model-button-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0; /* Más espacio alrededor del botón */
+}

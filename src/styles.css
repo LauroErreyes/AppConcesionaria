@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #000000;
+}
+
+.input-field {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+.input-field:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+.login-button {
+  background: linear-gradient(to right, #d4af37, #ffd700);
+}
+.login-button:hover {
+  background: linear-gradient(to right, #ffd700, #d4af37);
+  transform: translateY(-1px);
+}
+.register-container {
+  backdrop-filter: blur(10px);
+  background-color: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+.input-field {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+.input-field:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+.register-button {
+  background: linear-gradient(to right, #d4af37, #ffd700);
+}
+.register-button:hover {
+  background: linear-gradient(to right, #ffd700, #d4af37);
+  transform: translateY(-1px);
+}
+.section-divider {
+  border-color: rgba(212, 175, 55, 0.2);
+}
+.glass-effect {
+  background: rgba(26, 26, 26, 0.7);
+  backdrop-filter: blur(10px);
+}
+.navbar-blur {
+  background: rgba(26, 26, 26, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+/* Optional additional custom styles */
+.animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-hero-scale {
+  animation: heroScale 1.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes heroScale {
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+.hero-section {
+  transition: opacity 0.3s ease-out;
+}
+
+
+.bg-luxe-gold { background-color: #e6c33c; }
+.bg-gray-700 { background-color: #2c2c2e; }
+.bg-green-900 { background-color: #055524; }
+.bg-red-900 { background-color: #7f1d1d; }
+.text-gray-400 { color: #a0a0a0; }
+.text-gray-300 { color: #d4d4d4; }
+.rounded-lg { border-radius: 0.5rem; }
+.shadow-lg { box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); }
+.hover\:scale-105 { transform: scale(1.05); }
+.hover\:scale-110 { transform: scale(1.1); }
+.hover\:rotate-6 { transform: rotate(6deg); }
+.hover\:rotate-45 { transform: rotate(45deg); }
+
+/* Estilos adicionales específicos de Angular si son necesarios */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Si necesitas sobrescribir algún estilo de Tailwind o agregar estilos específicos */
+.login-container {
+  backdrop-filter: blur(8px);
+}
+

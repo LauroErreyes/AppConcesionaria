@@ -1,0 +1,43 @@
+/* Animaciones personalizadas */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { 
+    transform: translateY(20px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Estilos adicionales específicos de Angular si son necesarios */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Si necesitas sobrescribir algún estilo de Tailwind o agregar estilos específicos */
+.login-container {
+  backdrop-filter: blur(8px);
+}

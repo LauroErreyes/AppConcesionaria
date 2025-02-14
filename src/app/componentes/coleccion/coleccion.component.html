@@ -1,0 +1,203 @@
+<main class="bg-white pt-16 scale(0,8)">
+    <section class="py-20">
+
+    <div class="container mx-auto px-6">
+        <h1 class="text-3xl font-serif font-bold text-center mb-4 text-gray-900 
+                       animate-fade-in-down transform transition-all duration-500 
+                       hover:scale-105">
+                Nuestra Colección de Élite
+            </h1>
+            <p class="text-lg text-center text-gray-600 mb-12 
+                      animate-fade-in-up delay-200">
+                Descubre el pináculo del lujo automotriz
+            </p>
+
+        <div class="flex flex-wrap gap-8">
+            <!-- Sidebar con filtros -->
+            <aside class="w-full md:w-64 space-y-6">
+                <!-- Barra de búsqueda -->
+        <div class="mb-8">
+            <input type="text" 
+                   [formControl]="searchQuery"
+                   placeholder="Buscar por modelo..."
+                   class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+        </div>
+                <!-- Filtro de precio -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-medium mb-4">Precio</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Precio Mínimo</label>
+                            <input type="range"
+                                   [formControl]="minPrice"
+                                   class="w-full"
+                                   [min]="0"
+                                   [max]="maxPrice.value"
+                                   step="1000"
+                                   (input)="onPriceChange(minPrice.value!, maxPrice.value!)">
+                            <span class="text-sm text-gray-600">{{ minPrice.value | currency }}</span>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-600 mb-1">Precio Máximo</label>
+                            <input type="range"
+                                   [formControl]="maxPrice"
+                                   class="w-full"
+                                   [min]="minPrice.value"
+                                   [max]="100000"
+                                   step="1000"
+                                   (input)="onPriceChange(minPrice.value!, maxPrice.value!)">
+                            <span class="text-sm text-gray-600">{{ maxPrice.value | currency }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtro de marcas -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-medium mb-4">Marcas</h3>
+                    <div class="space-y-2">
+                        <div *ngFor="let brand of brands" 
+                             class="flex items-center">
+                            <input type="checkbox"
+                                   [checked]="selectedBrands.includes(brand)"
+                                   (change)="toggleBrand(brand)"
+                                   class="mr-2">
+                            <label>{{ brand }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtro de tipo de vehículo -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-medium mb-4">Tipo de vehículo</h3>
+                    <div class="space-y-2">
+                        <div *ngFor="let type of vehicleTypes" 
+                             class="flex items-center">
+                            <input type="checkbox"
+                                   [checked]="selectedTypes.includes(type)"
+                                   (change)="toggleType(type)"
+                                   class="mr-2">
+                            <label>{{ type }}</label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Grid de coches (usa filteredCars en lugar de cars) -->
+            <div class="flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <!-- Mantén el contenido existente del ngFor pero cambia cars por filteredCars -->
+                    <div *ngFor="let car of filteredCars; let i = index" 
+                         class="group bg-white border border-gray-200 rounded-lg 
+                                overflow-hidden animate-fade-in-up
+                                transform transition-all duration-500 
+                                hover:shadow-2xl hover:-translate-y-2"
+                         [style.animation-delay]="i * 100 + 'ms'">
+                        <!-- El resto del contenido de la tarjeta permanece igual -->
+                        <div class="relative group">
+                            <img [src]="getCarImage(car)" 
+                                 [alt]="car.brand + ' ' + car.car_model" 
+                                 class="w-full h-64 object-cover 
+                                        transform transition-all duration-700 
+                                        group-hover:scale-110">
+                            
+                            <!-- Overlay sutil al hover -->
+                            <div class="absolute inset-0 bg-black opacity-0 
+                                      transition-opacity duration-500 
+                                      group-hover:opacity-10"></div>
+                            
+                            <div *ngIf="currentstock > 0" 
+                                 class="absolute top-0 right-0 bg-yellow-500 text-white 
+                                        py-1 px-3 rounded-bl-lg font-medium
+                                        transform transition-all duration-300
+                                        hover:scale-105">
+                                Nuevo Modelo
+                            </div>
+    
+                            <div class="absolute bottom-4 right-4 flex space-x-2">
+                                <div *ngFor="let img of car.colors"
+                                     (click)="changeImage(car, img)"
+                                     class="w-6 h-6 rounded-full border cursor-pointer 
+                                            transform transition-all duration-300 
+                                            hover:scale-125 hover:shadow-lg
+                                            border-gray-300"
+                                     [style.background-color]="img.name"
+                                     [class.border-yellow-500]="isCurrentImage(car, img.image)">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="p-6">
+                            <h2 class="text-2xl font-serif font-bold mb-2 text-gray-800
+                                      transform transition-all duration-300 
+                                      group-hover:translate-x-2">
+                                {{car.brand}} {{car.car_model}}
+                            </h2>
+                            <p class="text-gray-500 mb-2 
+                                     transform transition-all duration-300 
+                                     group-hover:translate-x-2">
+                                {{car.year}} {{car.type}}
+                            </p>
+                            
+                            <div class="flex justify-between items-center mb-4
+                                      transform transition-all duration-300 
+                                      group-hover:translate-x-2">
+                                <span class="text-sm text-gray-500">
+                                    Stock: {{getCurrentStock(car)}} unidades
+                                </span>
+                                <span class="text-xs font-semibold px-2.5 py-0.5 rounded 
+                                           transition-all duration-500"
+                                      [ngClass]="{'bg-red-100 text-red-700': car.stock === 0,
+                                                'bg-green-100 text-green-700': car.stock > 0}">
+                                    {{getCurrentStock(car) > 0 ? 'Disponible' : 'Agotado'}}
+                                </span>
+                            </div>
+    
+                            <ul class="text-sm text-gray-600 mb-6">
+                                <li *ngFor="let feature of car.features" 
+                                    class="flex items-center mb-2 
+                                           transform transition-all duration-300 
+                                           hover:translate-x-2 hover:text-gray-800">
+                                    <svg class="w-4 h-4 mr-2 text-yellow-500 
+                                              transition-transform duration-300 
+                                              group-hover:scale-110" 
+                                         fill="currentColor" 
+                                         viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" 
+                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
+                                              clip-rule="evenodd">
+                                        </path>
+                                    </svg>
+                                   {{feature}}
+                                </li>
+                            </ul>
+    
+                            <div class="mb-6 transform transition-all duration-300 
+                                      group-hover:translate-x-2">
+                                <h3 class="text-sm font-medium text-gray-600 mb-2">
+                                    Precio: $  {{car.price}}
+                                </h3>
+                                
+                            </div>
+    
+                            <div class="grid items-center gap-4 
+                                      transform translate-y-8 opacity-0 
+                                      transition-all duration-500 ease-out 
+                                      group-hover:translate-y-0 
+                                      group-hover:opacity-100">
+                                <a [routerLink]="['/detalles', car._id]" 
+                                   class="bg-black text-white py-2 px-4 
+                                          rounded-full font-medium text-center
+                                          transform transition-all duration-300 
+                                          hover:bg-gray-800 hover:scale-105 
+                                          active:scale-95">
+                                    Ver Detalles
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</main>

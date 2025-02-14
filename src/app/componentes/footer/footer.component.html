@@ -1,0 +1,124 @@
+<footer *ngIf="shouldShowFooter()" 
+        class="bg-gradient-to-b from-luxe-dark to-black py-16 relative
+               border-t border-luxe-gold/20">
+    <div class="container mx-auto px-6">
+        <!-- Contenido principal del footer -->
+        <div class="flex flex-wrap justify-between">
+            <!-- Sección de la marca -->
+            <div class="w-full md:w-1/4 mb-8 md:mb-0 
+                        transform transition-all duration-500 hover:-translate-y-1">
+                <h3 class="text-2xl text-white font-serif font-bold mb-4 
+                           relative inline-block group">
+                    Luxe Motors
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                               transition-all duration-300 group-hover:w-full"></span>
+                </h3>
+                <p class="text-gray-400 transform transition-all duration-300 
+                          group-hover:text-gray-300">
+                    Elevando la experiencia automotriz desde 1985.
+                </p>
+            </div>
+
+            <!-- Enlaces rápidos -->
+            <div class="w-full md:w-1/4 mb-8 md:mb-0 
+                        transform transition-all duration-500 hover:-translate-y-1">
+                <h4 class="text-lg text-white font-semibold mb-4 
+                           relative inline-block group">
+                    Enlaces Rápidos
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                               transition-all duration-300 group-hover:w-full"></span>
+                </h4>
+                <ul class="space-y-3">
+                    <li class="transform transition-all duration-300 hover:translate-x-2">
+                        <a [routerLink]="['/']" 
+                           class="text-gray-400 hover:text-luxe-gold transition duration-300 
+                                  flex items-center group">
+                            <span class="w-0 h-[1px] bg-luxe-gold transition-all duration-300 
+                                       mr-0 group-hover:w-2 group-hover:mr-2"></span>
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="transform transition-all duration-300 hover:translate-x-2">
+                        <a [routerLink]="['/coleccion']" 
+                           class="text-gray-400 hover:text-luxe-gold transition duration-300 
+                                  flex items-center group">
+                            <span class="w-0 h-[1px] bg-luxe-gold transition-all duration-300 
+                                       mr-0 group-hover:w-2 group-hover:mr-2"></span>
+                            Colección
+                        </a>
+                    </li>
+                    <li class="transform transition-all duration-300 hover:translate-x-2">
+                        <a [routerLink]="['/servicios']" 
+                           class="text-gray-400 hover:text-luxe-gold transition duration-300 
+                                  flex items-center group">
+                            <span class="w-0 h-[1px] bg-luxe-gold transition-all duration-300 
+                                       mr-0 group-hover:w-2 group-hover:mr-2"></span>
+                            Servicios
+                        </a>
+                    </li>
+                    <li class="transform transition-all duration-300 hover:translate-x-2">
+                        <a [routerLink]="['/contacto']" 
+                           class="text-gray-400 hover:text-luxe-gold transition duration-300 
+                                  flex items-center group">
+                            <span class="w-0 h-[1px] bg-luxe-gold transition-all duration-300 
+                                       mr-0 group-hover:w-2 group-hover:mr-2"></span>
+                            Contacto
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="w-full md:w-1/4 
+                        transform transition-all duration-500 hover:-translate-y-1">
+                <h4 class="text-lg text-white font-semibold mb-4 
+                           relative inline-block group">
+                    Contáctenos
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                               transition-all duration-300 group-hover:w-full"></span>
+                </h4>
+                <div class="space-y-3">
+                    <p class="text-gray-400 flex items-center group 
+                             transition-all duration-300 hover:text-gray-300">
+                        <svg class="w-4 h-4 mr-2 text-luxe-gold transition-all duration-300 
+                                  group-hover:scale-110" 
+                             fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 0C6.477 0 3.617 2.86 3.617 6.383c0 4.788 6.383 13.617 6.383 13.617s6.383-8.829 6.383-13.617C16.383 2.86 13.523 0 10 0zm0 9.583a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4z"/>
+                        </svg>
+                        Avenida de la Exclusividad 123, Ciudad Élite
+                    </p>
+                    <p class="text-gray-400 flex items-center group 
+                             transition-all duration-300 hover:text-gray-300">
+                        <svg class="w-4 h-4 mr-2 text-luxe-gold transition-all duration-300 
+                                  group-hover:scale-110" 
+                             fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                        (123) 456-7890
+                    </p>
+                    <p class="text-gray-400 flex items-center group 
+                             transition-all duration-300 hover:text-gray-300">
+                        <svg class="w-4 h-4 mr-2 text-luxe-gold transition-all duration-300 
+                                  group-hover:scale-110" 
+                             fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                        </svg>
+                        infogluxemotors.com
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+            <p class="text-gray-400 transform transition-all duration-300 hover:text-gray-300">
+                &copy; 2024 Luxe Motors. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+
+    <!-- Decorative elements -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r 
+                from-transparent via-luxe-gold/20 to-transparent"></div>
+</footer>

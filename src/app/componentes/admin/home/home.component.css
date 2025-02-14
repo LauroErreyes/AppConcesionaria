@@ -1,0 +1,5 @@
+/* Aseguramos que el canvas ocupe el 100% del contenedor */
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

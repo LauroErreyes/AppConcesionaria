@@ -1,0 +1,6 @@
+aside {
+    transition: all 0.3s;
+  }
+  aside a:hover {
+    transform: scale(1.05);
+  }

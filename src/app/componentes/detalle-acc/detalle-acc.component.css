@@ -1,0 +1,56 @@
+/* Variables de color Tesla */
+:root {
+    --tesla-red: #e82127;
+    --tesla-red-dark: #c41e23;
+  }
+
+  /* Animaciones personalizadas */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-slideUp {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+
+  /* Utilidades personalizadas */
+  .bg-tesla-red {
+    background-color: var(--tesla-red);
+  }
+
+  .bg-tesla-red-dark {
+    background-color: var(--tesla-red-dark);
+  }
+
+  .ring-tesla-red {
+    --tw-ring-color: var(--tesla-red);
+  }
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }

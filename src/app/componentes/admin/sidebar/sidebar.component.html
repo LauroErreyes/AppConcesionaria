@@ -1,0 +1,51 @@
+<aside 
+  *ngIf="shouldShow()" 
+  class="fixed top-0 left-0 h-full bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out"
+  [ngClass]="{ 'w-16': !isExpanded, 'w-60': isExpanded }"
+  (mouseenter)="toggleSidebar(true)" 
+  (mouseleave)="toggleSidebar(false)">
+  
+  <!-- Logo -->
+  <div class="flex items-center justify-center p-4">
+    <span class="text-lg font-bold" *ngIf="isExpanded">Admin Panel</span>
+    <span *ngIf="!isExpanded">🚀</span>
+  </div>
+
+  <!-- Menú Principal -->
+  <nav class="flex-1">
+    <ul>
+      <li *ngFor="let item of menuItems" class="group">
+        <a 
+          [routerLink]="item.route" 
+          class="flex items-center space-x-3 p-3 hover:bg-gray-700 transition">
+          <span class="text-xl"><i [class]="'fas fa-' + item.icon"></i></span>
+          <span *ngIf="isExpanded">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sección Inferior: Botones Extra -->
+  <div class="p-4 border-t border-gray-700">
+    <ul>
+      <!-- Botón para regresar al Home -->
+      <li class="mb-2">
+        <a 
+          [routerLink]="['/home']" 
+          class="flex items-center space-x-3 p-3 hover:bg-gray-700 transition">
+          <span class="text-xl"><i class="fas fa-arrow-left"></i></span>
+          <span *ngIf="isExpanded">Inicio</span>
+        </a>
+      </li>
+      <!-- Botón para Cerrar Sesión -->
+      <li>
+        <button 
+          (click)="logout()"
+          class="w-full text-left flex items-center space-x-3 p-3 hover:bg-gray-700 transition">
+          <span class="text-xl"><i class="fas fa-sign-out-alt"></i></span>
+          <span *ngIf="isExpanded">Cerrar Sesión</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</aside>

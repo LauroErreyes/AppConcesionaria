@@ -1,0 +1,158 @@
+<div class="font-sans flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 p-4">
+  <div class="w-full max-w-2xl transform hover:scale-[1.01] transition-transform duration-300">
+    <div class="text-center mb-8 animate-fade-in">
+      <h1 class="text-5xl font-serif font-bold mb-2 text-gray-200 hover:text-gray-100 transition-colors duration-300">Luxe Motors</h1>
+      <p class="text-xl text-gray-400">Registro de Nueva Cuenta</p>
+    </div>
+
+    <div class="register-container rounded-lg p-8 bg-gray-800/50 backdrop-blur-sm shadow-2xl border border-gray-700 animate-slide-up">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Información Personal -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-serif text-gray-200 mb-4">Información Personal</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="group">
+              <label for="first_name" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Nombre</label>
+              <input
+                id="first_name"
+                formControlName="first_name"
+                class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+                type="text"
+                placeholder="Ingrese su nombre"
+              />
+              <small *ngIf="registerForm.get('first_name')?.hasError('required') && registerForm.get('first_name')?.touched" class="text-red-400 animate-shake block mt-1">El nombre es obligatorio.</small>
+            </div>
+            <div class="group">
+              <label for="last_name" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Apellidos</label>
+              <input
+                id="last_name"
+                formControlName="last_name"
+                class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+                type="text"
+                placeholder="Ingrese sus apellidos"
+              />
+              <small *ngIf="registerForm.get('last_name')?.hasError('required') && registerForm.get('last_name')?.touched" class="text-red-400 animate-shake block mt-1">Los apellidos son obligatorios.</small>
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="email" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Correo Electrónico</label>
+            <input
+              id="email"
+              formControlName="email"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+              type="email"
+              placeholder="ejemplo@correo.com"
+            />
+            <small *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched" class="text-red-400 animate-shake block mt-1">El correo es obligatorio.</small>
+            <small *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched" class="text-red-400 animate-shake block mt-1">El correo no es válido.</small>
+          </div>
+
+          <div class="group">
+            <label for="phone" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Teléfono</label>
+            <input
+              id="phone"
+              formControlName="phone"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+              type="tel"
+              placeholder="Ingrese su teléfono"
+            />
+          </div>
+
+          <div class="group">
+            <label for="address" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Dirección</label>
+            <input
+              id="address"
+              formControlName="address"
+              class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+              type="text"
+              placeholder="Ingrese su dirección"
+            />
+            <small *ngIf="registerForm.get('address')?.hasError('required') && registerForm.get('address')?.touched" class="text-red-400 animate-shake block mt-1">La dirección es obligatoria.</small>
+          </div>
+        </div>
+
+        <hr class="border-gray-700 my-6" />
+
+        <!-- Información de Cuenta -->
+        <div class="space-y-4">
+          <h2 class="text-xl font-serif text-gray-200 mb-4">Información de Cuenta</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="group">
+              <label for="password" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Contraseña</label>
+              <input
+                id="password"
+                formControlName="password"
+                class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+                type="password"
+                placeholder="Ingrese su contraseña"
+              />
+              <small *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched" class="text-red-400 animate-shake block mt-1">La contraseña es obligatoria.</small>
+              <small *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched" class="text-red-400 animate-shake block mt-1">Mínimo 6 caracteres.</small>
+            </div>
+            <div class="group">
+              <label for="confirmPassword" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Confirmar Contraseña</label>
+              <input
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+                type="password"
+                placeholder="Confirme su contraseña"
+              />
+              <small *ngIf="registerForm.hasError('passwordsMismatch') && registerForm.get('confirmPassword')?.touched" class="text-red-400 animate-shake block mt-1">Las contraseñas no coinciden.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="group">
+          <label for="foto" class="block text-sm font-semibold mb-2 text-gray-300 group-hover:text-gray-200 transition-colors duration-200">Foto URL</label>
+          <input
+            id="foto"
+            formControlName="foto"
+            class="w-full px-4 py-3 rounded-lg bg-gray-700/50 text-gray-200 border border-gray-600 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 focus:outline-none transition-all duration-200 placeholder:text-gray-500"
+            type="text"
+            placeholder="URL de su foto"
+          />
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full bg-gray-700 hover:bg-gray-600 text-gray-200 font-bold py-3 px-4 rounded-lg shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            [disabled]="registerForm.invalid"
+          >
+            Crear Cuenta
+          </button>
+        </div>
+        
+        <div *ngIf="errorMessage" class="text-red-400 text-sm mt-2 animate-shake text-center">
+          {{ errorMessage }}
+        </div>
+
+        <div class="mt-6 text-center">
+          <a [routerLink]="['/login']" class="inline-flex items-center text-gray-400 hover:text-gray-200 transition-colors duration-200 group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Iniciar Sesión, Aquí
+          </a>
+        </div>
+
+        <div class="mt-6 text-center">
+          <a [routerLink]="['/home']" class="inline-flex items-center text-gray-400 hover:text-gray-200 transition-colors duration-200 group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver al inicio
+          </a>
+        </div>
+
+        <div class="text-center text-sm text-gray-400">
+          Al registrarte, aceptas nuestros
+          <a class="text-gray-300 hover:text-gray-100 transition-colors duration-200 underline">Términos y Condiciones</a> y
+          <a class="text-gray-300 hover:text-gray-100 transition-colors duration-200 underline">Política de Privacidad</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

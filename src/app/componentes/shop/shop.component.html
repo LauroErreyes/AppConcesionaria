@@ -1,0 +1,116 @@
+<main class="bg-white pt-16">
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h1 class="text-5xl font-serif font-bold text-center mb-4 text-gray-900 
+                       animate-fade-in-down transform transition-all duration-500 
+                       hover:scale-105">
+                Tienda de Accesorios
+            </h1>
+            <p class="text-lg text-center text-gray-600 mb-12 
+                      animate-fade-in-up delay-200">
+                Encuentra los complementos perfectos para tu estilo
+            </p>
+            <div class="flex flex-wrap gap-8">
+                <!-- Sección de filtros -->
+                <div class="mb-8 space-y-6">
+                    <!-- Barra de búsqueda -->
+                    <div class="max-w-xl mx-auto">
+                        <input type="text" [formControl]="searchQuery" placeholder="Buscar por nombre..." class="w-full p-3 border rounded-lg focus:ring-2 
+                                  focus:ring-gray-500 focus:border-transparent">
+                    </div>
+
+                    <!-- Filtro de precio -->
+                    <div class="max-w-xl mx-auto bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-medium mb-4">Rango de Precio</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Precio Mínimo</label>
+                                <input type="range" [formControl]="minPrice" class="w-full" [min]="0"
+                                    [max]="maxPrice.value" step="1"
+                                    (input)="onPriceChange(minPrice.value!, maxPrice.value!)">
+                                <span class="text-sm text-gray-600">{{ minPrice.value | currency }}</span>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-600 mb-1">Precio Máximo</label>
+                                <input type="range" [formControl]="maxPrice" class="w-full" [min]="minPrice.value"
+                                    [max]="1000" step="1"
+                                    (input)="onPriceChange(minPrice.value!, maxPrice.value!)">
+                                <span class="text-sm text-gray-600">{{ maxPrice.value | currency }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid de accesorios (usando filteredAccessories) -->
+                <div class="flex-1">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        <div *ngFor="let accessory of filteredAccessories; let i = index" class="group bg-white rounded-lg overflow-hidden 
+                            animate-fade-in-up hover:shadow-2xl
+                            transform transition-all duration-500 
+                            hover:-translate-y-2" [style.animation-delay]="i * 100 + 'ms'">
+                            <!-- El resto del contenido de la tarjeta permanece igual -->
+                            <div class="relative overflow-hidden">
+                                <img [src]="accessory.image[0]" [alt]="accessory.name" class="w-full h-64 object-cover 
+                                    transform transition-all duration-700 
+                                    group-hover:scale-110">
+
+                                <div class="absolute inset-0 bg-black opacity-0 
+                                  transition-opacity duration-500 
+                                  group-hover:opacity-10">
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <h2 class="text-2xl font-serif font-bold mb-2 text-gray-800 
+                                   transform transition-all duration-300 
+                                   group-hover:translate-x-2">
+                                    {{ accessory.name }}
+                                </h2>
+
+                                <p class="text-gray-700 mb-4 transition-all duration-300 
+                                  group-hover:translate-x-2">
+                                    {{ accessory.description }}
+                                </p>
+
+                                <div class="flex justify-between items-center mb-4 
+                                  transform transition-all duration-300 
+                                  group-hover:translate-x-2">
+                                    <span class="text-xl font-bold text-gray-900">
+                                        ${{ accessory.price }}
+                                    </span>
+                                    <span class="text-sm font-semibold px-2.5 py-0.5 rounded 
+                                       transition-all duration-500" [ngClass]="{'bg-green-100 text-green-700': accessory.stock > 0, 
+                                            'bg-red-100 text-red-700': accessory.stock === 0}">
+                                        {{ accessory.stock > 0 ? 'Disponible' : 'Agotado' }}
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-4 mt-4 
+                                  transform translate-y-8 opacity-0 
+                                  transition-all duration-500 ease-out 
+                                  group-hover:translate-y-0 
+                                  group-hover:opacity-100">
+                                  <a [routerLink]="['/detalle_acc', accessory._id]" class="w-full bg-gray-100 text-gray-800 py-2 px-4 
+                                      rounded-full text-center text-sm font-medium 
+                                      transform transition-all duration-300 
+                                      hover:bg-gray-200 hover:scale-105 
+                                      active:scale-95">
+                                        Ver Detalles
+                                    </a>  
+                                  <button *ngIf="isAuth()" (click)="addToCart(accessory)" class="w-full bg-black text-white py-2 px-4 
+                                           rounded-full text-sm transform 
+                                           transition-all duration-300 
+                                           hover:bg-gray-800 hover:scale-105 
+                                           active:scale-95">
+                                        Añadir a Carrito
+                                    </button>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

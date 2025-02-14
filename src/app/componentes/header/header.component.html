@@ -1,0 +1,124 @@
+<header *ngIf="shouldShowHeader()" class="fixed top-0 left-0 right-0 z-50 w-full animate-fade-in-down">
+    <!-- Navbar con efecto de cristal -->
+    <nav class="relative backdrop-blur-md bg-black/70 border-b border-luxe-gold/20">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo con animación -->
+                <a [routerLink]="['/']" class="text-3xl font-serif font-bold text-white 
+                          transform transition-all duration-300 
+                          hover:text-luxe-gold hover:scale-105">
+                    Luxe Motors
+                </a>
+
+                <!-- Links de navegación principal -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a [routerLink]="['/home']" class="relative text-white group">
+                        <span class="transition-all duration-300 group-hover:text-luxe-gold">Inicio</span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                                   transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a [routerLink]="['/coleccion']" class="relative text-white group">
+                        <span class="transition-all duration-300 group-hover:text-luxe-gold">Colección</span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                                   transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a [routerLink]="['/shop']" class="relative text-white group">
+                        <span class="transition-all duration-300 group-hover:text-luxe-gold">Tienda</span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                                   transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a [routerLink]="['/contacto']" class="relative text-white group">
+                        <span class="transition-all duration-300 group-hover:text-luxe-gold">Contacto</span>
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-luxe-gold 
+                                   transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+
+                    <!-- Navegación para usuarios no autenticados -->
+                    <div *ngIf="!isAuthenticated()" id="guestNav" class="hidden md:flex space-x-4 items-center">
+                        <a [routerLink]="['/login']" class="text-white border border-luxe-gold rounded-full px-6 py-2
+                                  transform transition-all duration-300 
+                                  hover:bg-luxe-gold hover:text-white hover:scale-105">
+                            Iniciar Sesión
+                        </a>
+                        <a [routerLink]="['/register']" class="bg-luxe-gold text-black rounded-full px-6 py-2
+                                  transform transition-all duration-300 
+                                  hover:bg-white hover:scale-105">
+                            Registrarse
+                        </a>
+                    </div>
+                    <div *ngIf="isAuthenticated()" class="relative group">
+                        <!-- Contenedor principal con detección de hover -->
+                        <button [routerLink]="['/cart', getUserName()?.sub]" class="flex items-center p-2 rounded-full
+                    transition-all duration-300 ease-in-out
+                     hover:scale-110
+                    active:scale-95
+                    group-hover:animate-bounce-gentle
+                    focus:outline-none focus:ring-2 focus:ring-yellow-300">
+
+                            <!-- Efecto de brillo/resplandor al hover -->
+                            <div class="absolute inset-0 rounded-full
+                    bg-gradient-to-r from-yellow-200 to-yellow-400 opacity-0
+                    group-hover:opacity-25 
+                    transition-opacity duration-300
+                    blur-xl">
+                            </div>
+
+                            <!-- Ícono del carrito con animación -->
+                            <mat-icon class="text-white text-1xl transform
+                        transition-all duration-300 ease-in-out
+                        group-hover:text-yellow-500
+                        group-hover:rotate-[15deg]">
+                                shopping_cart
+                            </mat-icon>
+                        </button>
+                    </div>
+
+                    <!-- Navegación para usuarios autenticados -->
+                    <div *ngIf="isAuthenticated()" id="authNav" class="text-luxe-gold flex items-center 
+                                           transform transition-all duration-300 
+                                           hover:text-white group-hover:scale-105">
+
+                        <div class="relative group">
+
+                            <button id="profileButton" (click)="toggleProfileMenu()" class="text-luxe-gold flex items-center 
+                                           transform transition-all duration-300 
+                                           hover:text-white group-hover:scale-105">
+                                <img id="Image" [src]=getUserName()?.foto alt="Profile" class="w-8 h-8 rounded-full mr-2 
+                                            transition-transform duration-300 
+                                            group-hover:scale-110">
+                                <!--  <span class="text-white">{{getUserName()?.first_name}}</span>-->
+                                <span class="text-white">{{ getUserName()?.email }}</span>
+                            </button>
+
+                            <!-- Menú desplegable con animación -->
+                            <div id="profileMenu" [class.hidden]="isProfileMenuOpen" class="absolute right-0 mt-2 w-48 bg-black/90 
+                                        backdrop-blur-md border border-luxe-gold 
+                                        rounded-md shadow-lg
+                                        transform transition-all duration-300 
+                                        origin-top-right
+                                        animate-fade-in-down">
+                                <a *ngIf="isAdmin()" id="adminLink" [routerLink]="['/admin/car']" (click)="toggleProfileMenu()" class="block px-4 py-3 text-white
+                                          transition-all duration-300 
+                                          hover:bg-luxe-gold hover:text-gray 
+                                          first:rounded-t-md" >
+                                    Dashboard Admin
+                                </a>
+                                <a [routerLink]="['/perfil']" (click)="toggleProfileMenu()" class="block px-4 py-3 text-white
+                                          transition-all duration-300 
+                                          hover:bg-luxe-gold hover:text-gray">
+                                    Mi Perfil
+                                </a>
+                                <button (click)="logout(); toggleProfileMenu()" class="w-full text-left px-4 py-3 text-white
+                                               transition-all duration-300 
+                                               hover:bg-luxe-gold hover:text-gray 
+                                               last:rounded-b-md">
+                                    Cerrar Sesión
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

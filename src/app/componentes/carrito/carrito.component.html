@@ -1,0 +1,283 @@
+<main class="min-h-screen bg-white py-20 px-4 sm:px-6 lg:px-8">
+  <section class="py-20">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+       <h1 class="text-5xl font-serif font-bold text-center mb-4 text-gray-900 
+                       animate-fade-in-down transform transition-all duration-500 
+                       hover:scale-105">
+                Tu Carrito
+            </h1>
+            
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-gray-500">{{ cartItems.items.length }} items</span>
+        <button *ngIf="cartItems.items.length > 0"
+                (click)="clearCart()"
+                class="text-sm text-red-600 hover:text-red-800 transition-colors duration-200">
+          Vaciar Carrito
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-16">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error"
+         class="bg-red-50 text-red-600 p-4 rounded-lg mb-4 shadow-sm">
+      <p class="flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"/>
+        </svg>
+        {{ error }}
+      </p>
+    </div>
+
+    <!-- Contenido del Carrito -->
+    <div *ngIf="!isLoading && !error && cartItems.items.length > 0" 
+         class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Sección de Artículos -->
+      <section class="lg:col-span-8">
+        <div class="space-y-6">
+          <div *ngFor="let item of cartItems.items" 
+               class="bg-white rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-md">
+            <div class="flex gap-6">
+              <!-- Imagen del Producto -->
+              <div class="w-24 h-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 relative">
+                <img [src]="item.image" 
+                     [alt]="item.accessory"
+                     class="h-full w-full object-cover object-center transform transition-transform duration-200 hover:scale-110">
+                <div *ngIf="isUpdating" 
+                     class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+                  <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                </div>
+              </div>
+
+              <!-- Detalles del Producto -->
+              <div class="flex flex-1 flex-col">
+                <div class="flex justify-between">
+                  <div>
+                    <h3 class="text-lg font-medium text-gray-900 hover:text-blue-600 transition-colors duration-200">
+                      {{ item.name_acc }}
+                    </h3>
+                  </div>
+                  <p class="text-lg font-medium text-gray-900">
+                    ${{ item.unit_price.toFixed(2) }}
+                  </p>
+                </div>
+
+                <div class="flex flex-1 items-end justify-between mt-4">
+                  <div class="flex items-center gap-2">
+                    <div class="flex items-center border border-gray-300 rounded-lg">
+                      <button 
+                        (click)="updateQuantity(item, item.quantity - 1)"
+                        [disabled]="isUpdating"
+                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                        -
+                      </button>
+                      <input 
+                        type="number" 
+                        [value]="item.quantity"
+                        (change)="updateQuantity(item, getInputValue($event))"
+                        [disabled]="isUpdating"
+                        min="1"
+                        class="w-16 text-center border-x border-gray-300 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                      <button 
+                        (click)="updateQuantity(item, item.quantity + 1)"
+                        [disabled]="isUpdating"
+                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-4">
+                    <p class="text-lg font-medium text-gray-900">
+                      ${{ item.total.toFixed(2) }}
+                    </p>
+                    <button 
+                      (click)="removeItem(item)"
+                      [disabled]="isUpdating"
+                      class="text-red-600 hover:text-red-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección de Resumen de Orden -->
+      <section class="lg:col-span-4">
+        <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Resumen de Orden</h2>
+
+          <div class="space-y-4">
+            <div class="border-b border-gray-200 pb-4">
+              <div *ngFor="let item of cartItems.items" class="flex justify-between py-2">
+                <span class="text-sm text-gray-600">{{ item.name_acc }} (x{{ item.quantity }})</span>
+                <span class="text-sm font-medium text-gray-900">${{ item.total.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-4">
+              <dt class="text-base font-semibold text-gray-900">Total</dt>
+              <dd class="text-xl font-bold text-blue-600">${{ cartItems.total.toFixed(2) }}</dd>
+            </div>
+
+            <div class="space-y-3">
+              <!-- Al hacer clic se abre el modal de pago -->
+              <button 
+                (click)="checkout()"
+                [disabled]="isUpdating"
+                class="w-full bg-blue-600 text-white rounded-lg px-4 py-3 font-medium
+                       hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                       transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
+                       disabled:opacity-50 disabled:cursor-not-allowed">
+                Finalizar Compra
+              </button>
+
+              <button 
+                (click)="continueShopping()"
+                class="w-full bg-white text-blue-600 border border-blue-600 rounded-lg px-4 py-3 font-medium
+                       hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                       transform transition-all duration-200">
+                Continuar Comprando
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Estado de Carrito Vacío -->
+    <div *ngIf="!isLoading && !error && cartItems.items.length === 0" 
+         class="text-center py-16 bg-white rounded-lg shadow-sm">
+      <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-gray-900">Tu carrito está vacío</h3>
+      <p class="mt-2 text-sm text-gray-500">¡Agrega algunos productos para comenzar!</p>
+      <button 
+        (click)="continueShopping()"
+        class="mt-6 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm 
+               text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none 
+               focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        Continuar Comprando
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de Pago -->
+  <div *ngIf="showPaymentForm" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg relative">
+      <!-- Botón para cerrar el modal -->
+      <button (click)="closePaymentModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <h2 class="text-xl font-semibold text-gray-700 mb-6">Forma de Pago</h2>
+
+      <div class="flex gap-4 mb-6">
+        <button (click)="toggleFormaPago('tarjeta')" [ngClass]="{'bg-blue-600 text-white': formaPago === 'tarjeta'}"
+                class="px-4 py-2 rounded-md bg-gray-200 text-gray-700">
+          Tarjeta
+        </button>
+        <button (click)="toggleFormaPago('efectivo')" [ngClass]="{'bg-blue-600 text-white': formaPago === 'efectivo'}"
+                class="px-4 py-2 rounded-md bg-gray-200 text-gray-700">
+          Efectivo
+        </button>
+      </div>
+
+      <!-- Formulario de Tarjeta -->
+      <div *ngIf="formaPago === 'tarjeta'" class="bg-white p-6 rounded-xl shadow-lg mb-4">
+        <div class="grid gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Número de Tarjeta</label>
+            <input type="text" [(ngModel)]="tarjetaForm.numero" (input)="formatearNumeroTarjeta($event)"
+                   class="w-full px-3 py-2 border rounded-md" placeholder="1234 5678 9012 3456">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre en la Tarjeta</label>
+            <input type="text" [(ngModel)]="tarjetaForm.nombre" class="w-full px-3 py-2 border rounded-md"
+                   placeholder="NOMBRE APELLIDO">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Expiración</label>
+              <input type="text" [(ngModel)]="tarjetaForm.expiracion" (input)="formatearExpiracion($event)"
+                     class="w-full px-3 py-2 border rounded-md" placeholder="MM/YY">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+              <input type="text" [(ngModel)]="tarjetaForm.cvv" (input)="formatearCVV($event)"
+                     class="w-full px-3 py-2 border rounded-md" placeholder="123">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de Efectivo -->
+      <div *ngIf="formaPago === 'efectivo'" class="bg-white p-6 rounded-xl shadow-lg mb-4">
+        <div class="text-gray-600">
+          <p>Puede realizar su pago en efectivo en cualquiera de nuestras agencias:</p>
+          <ul class="list-disc ml-4 mt-2">
+            <li>Agencia Principal - Av. Principal #123</li>
+            <li>Sucursal Norte - Centro Comercial Norte</li>
+            <li>Sucursal Sur - Plaza del Sur</li>
+          </ul>
+          <p class="mt-4 text-sm text-gray-500">
+            * El pago debe realizarse dentro de las próximas 48 horas para mantener su reserva.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <button (click)="mostrarConfirmacionVenta()"
+                class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+          Confirmar Venta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación de Venta -->
+  <div *ngIf="confirmationModalVisible"
+       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-md shadow-lg max-w-sm w-full">
+      <h3 class="text-xl font-bold mb-4">Confirmar Compra</h3>
+      <p class="mb-4">¿Está seguro de que desea confirmar la compra?</p>
+      <div class="flex justify-end gap-4">
+        <button (click)="onCancelarVenta()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+          Cancelar
+        </button>
+        <button (click)="onConfirmarVenta()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay de Carga -->
+  <div *ngIf="loadingOverlayVisible"
+       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="text-white text-xl">
+      Procesando compra...
+    </div>
+  </div>
+</section>
+</main>

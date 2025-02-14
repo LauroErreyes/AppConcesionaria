@@ -1,0 +1,248 @@
+<div class="min-h-screen bg-gray-100">
+  <div class="py-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Filtros -->
+          <div class="bg-white p-4 rounded-lg shadow mb-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Filtros</h3>
+              <form [formGroup]="filterForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-gray-700">Año</label>
+                      <select formControlName="year"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-gray-700">Mes</label>
+                      <select formControlName="month"
+                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                          <option value="">Todos</option>
+                          <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+                      </select>
+                  </div>
+              </form>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <!-- Ventas de Carros -->
+              <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                  <div class="flex items-center justify-between">
+                      <div>
+                          <p class="text-sm font-medium text-gray-500">Ventas de Carros</p>
+                          <h2 class="text-2xl font-bold text-gray-900">{{ totalCarSales }}</h2>
+                      </div>
+                      <div class="p-3 bg-blue-100 rounded-full">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none"
+                              viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                          </svg>
+                      </div>
+                  </div>
+                  <div class="mt-4">
+                      <p class="text-sm text-gray-600">
+                          <span [class]="monthlyGrowth > 0 ? 'text-green-500' : 'text-red-500'">
+                              {{ monthlyGrowth }}%
+                          </span>
+                          vs mes anterior
+                      </p>
+                  </div>
+              </div>
+
+              <!-- Ventas de Accesorios -->
+              <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                  <div class="flex items-center justify-between">
+                      <div>
+                          <p class="text-sm font-medium text-gray-500">Ventas de Accesorios</p>
+                          <h2 class="text-2xl font-bold text-gray-900">{{ totalAccSales }}</h2>
+                      </div>
+                      <div class="p-3 bg-green-100 rounded-full">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
+                              viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                          </svg>
+                      </div>
+                  </div>
+                  <div class="mt-4">
+                      <p class="text-sm text-gray-600">
+                          <span [class]="accMonthlyGrowth > 0 ? 'text-green-500' : 'text-red-500'">
+                              {{ accMonthlyGrowth }}%
+                          </span>
+                          vs mes anterior
+                      </p>
+                  </div>
+              </div>
+
+              <!-- Ingresos Totales -->
+              <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                  <div class="flex items-center justify-between">
+                      <div>
+                          <p class="text-sm font-medium text-gray-500">Ingresos Totales</p>
+                          <h2 class="text-2xl font-bold text-gray-900">{{ totalRevenue | currency }}</h2>
+                      </div>
+                      <div class="p-3 bg-purple-100 rounded-full">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none"
+                              viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                      </div>
+                  </div>
+                  <div class="mt-4">
+                      <p class="text-sm text-gray-600">
+                          <span [class]="revenueGrowth > 0 ? 'text-green-500' : 'text-red-500'">
+                              {{ revenueGrowth }}%
+                          </span>
+                          vs mes anterior
+                      </p>
+                  </div>
+              </div>
+
+              <!-- Total de Usuarios -->
+              <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                  <div class="flex items-center justify-between">
+                      <div>
+                          <p class="text-sm font-medium text-gray-500">Usuarios</p>
+                          <h2 class="text-2xl font-bold text-gray-900">{{ totalUsers }}</h2>
+                      </div>
+                      <div class="p-3 bg-yellow-100 rounded-full">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none"
+                              viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                      </div>
+                  </div>
+                  <div class="mt-4">
+                      <p class="text-sm text-gray-600">
+                          <span [class]="userGrowth > 0 ? 'text-green-500' : 'text-red-500'">
+                              {{ userGrowth }}%
+                          </span>
+                          vs mes anterior
+                      </p>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Top Sellers Section -->
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Top Selling Cars -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Carros Vendidos</h3>
+                  <div class="space-y-4">
+                      <div *ngFor="let car of topSellingCars" class="flex justify-between items-center">
+                          <div>
+                              <p class="font-medium">{{ car.brand }} {{ car.model }}</p>
+                              <p class="text-sm text-gray-500">{{ car.count }} ventas</p>
+                          </div>
+                          <p class="text-sm font-medium">{{ car.revenue | currency }}</p>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Top Buyers -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Compradores</h3>
+                  <div class="space-y-4">
+                    <div *ngFor="let buyer of topBuyers" class="flex justify-between items-center">
+                      <div>
+                          <p class="font-medium">{{ buyer.user }}</p>
+                          <p class="text-sm text-gray-500">{{ buyer.purchases }} compras</p>
+                      </div>
+                      <p class="text-sm font-medium">{{ buyer.totalSpent | currency }}</p>
+                  </div>
+                  </div>
+              </div>
+
+              <!-- Top Accessories -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Accesorios</h3>
+                  <div class="space-y-4">
+                      <div *ngFor="let acc of topAccessories" class="flex justify-between items-center">
+                          <div>
+                              <p class="font-medium">{{ acc.name }}</p>
+                              <p class="text-sm text-gray-500">{{ acc.quantity }} unidades</p>
+                          </div>
+                          <p class="text-sm font-medium">{{ acc.revenue | currency }}</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sección de Gráficos -->
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Gráfico de Ventas de Carros -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Tendencia de Ventas (Carros)</h3>
+                  <div class="w-full h-64 relative">
+                      <canvas #salesChart class="absolute inset-0"></canvas>
+                  </div>
+              </div>
+              <!-- Gráfico de Ventas de Accesorios -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Tendencia de Ventas (Accesorios)</h3>
+                  <div class="w-full h-64 relative">
+                      <canvas #accSalesChart class="absolute inset-0"></canvas>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sección de Tablas -->
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Últimas Ventas de Carros -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Últimas Ventas de Carros</h3>
+                  <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                          <tr>
+                              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vehículo
+                              </th>
+                              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
+                          </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200">
+                          <tr *ngFor="let sale of latestCarSales">
+                              <td class="px-4 py-2 text-sm text-gray-900">{{ sale.date | date:'shortDate' }}</td>
+                              <td class="px-4 py-2 text-sm text-gray-900">
+                                  {{ sale.vehiculo.brand }} - {{ sale.vehiculo.modelo }}
+                              </td>
+                              <td class="px-4 py-2 text-sm text-gray-900">{{ sale.vehiculo.precioBase | currency }}
+                              </td>
+                          </tr>
+                          <tr *ngIf="latestCarSales.length === 0">
+                              <td colspan="3" class="px-4 py-2 text-sm text-gray-500 text-center">No hay ventas
+                                  recientes.</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+              <!-- Últimas Ventas de Accesorios -->
+              <div class="bg-white rounded-lg shadow p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-4">Últimas Ventas de Accesorios</h3>
+                  <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                          <tr>
+                              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
+                              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                          </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200">
+                          <tr *ngFor="let sale of latestAccSales">
+                              <td class="px-4 py-2 text-sm text-gray-900">{{ sale.orderDate | date:'shortDate' }}</td>
+                              <td class="px-4 py-2 text-sm text-gray-900">{{ sale.user }}</td>
+                              <td class="px-4 py-2 text-sm text-gray-900">{{ sale.totalAccesorios | currency }}</td>
+                          </tr>
+                          <tr *ngIf="latestAccSales.length === 0">
+                              <td colspan="3" class="px-4 py-2 text-sm text-gray-500 text-center">No hay ventas
+                                  recientes.</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

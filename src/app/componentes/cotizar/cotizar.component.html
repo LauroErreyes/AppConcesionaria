@@ -1,0 +1,199 @@
+<main class="pt-16 bg-gray-100 min-h-screen">
+  <div class="max-w-7xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+      Cotizador de Vehículos
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section class="bg-white p-6 rounded-xl shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Selecciona tu Plan</h2>
+        <h3 class="text-lg font-semibold text-gray-600 mb-3">Método de Pago</h3>
+        <div class="flex gap-3 mb-6">
+          <button (click)="toggleMetodoPago('financiado')"
+            [ngClass]="{'transform scale-110 shadow-lg bg-blue-600 text-white': metodoPago === 'financiado'}"
+            class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 transition duration-300 ease-in-out hover:bg-gray-300 focus:outline-none">
+            Financiado
+          </button>
+          <button (click)="toggleMetodoPago('contado')"
+            [ngClass]="{'transform scale-110 shadow-lg bg-blue-600 text-white': metodoPago === 'contado'}"
+            class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 transition duration-300 ease-in-out hover:bg-gray-300 focus:outline-none">
+            Contado
+          </button>
+        </div>
+        <div *ngIf="metodoPago === 'financiado'">
+          <h3 class="text-lg font-semibold text-gray-600 mb-3">Cantidad de Cuotas</h3>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <button *ngFor="let cuota of cuotas" (click)="selectCuota(cuota)"
+              [ngClass]="{'transform scale-110 shadow-lg bg-blue-600 text-white': cuota === selectedCuota}"
+              class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 transition duration-300 ease-in-out hover:bg-gray-300 focus:outline-none">
+              {{ cuota }}
+            </button>
+          </div>
+
+          <h3 class="text-lg font-semibold text-gray-600 mb-3">Entrada Inicial</h3>
+          <div class="flex flex-wrap gap-3 mb-6">
+            <button *ngFor="let porcentaje of porcentajes" (click)="selectEntrada(porcentaje)"
+              [ngClass]="{'transform scale-110 shadow-lg bg-blue-600 text-white': porcentaje === selectedEntrada}"
+              class="px-4 py-2 rounded-md bg-gray-200 text-gray-700 transition duration-300 ease-in-out hover:bg-gray-300 focus:outline-none">
+              {{ porcentaje }}%
+            </button>
+          </div>
+
+          <div>
+            <label for="custom-entrada" class="block text-gray-500 mb-2">Especifica tu entrada:</label>
+            <input id="custom-entrada" type="number" [(ngModel)]="customEntrada"
+              (ngModelChange)="onCustomEntradaChange()" placeholder="$7000"
+              class="w-full px-3 py-2 text-gray-500 border rounded-md shadow-sm focus:ring focus:ring-blue-300" />
+          </div>
+        </div>
+        <div *ngIf="metodoPago === 'contado'" class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-600 mb-3">Pago al Contado</h3>
+          <p class="text-gray-700">
+            Deberá realizar un pago único de ${{car?.price?.toLocaleString() || 0}}
+          </p>
+        </div>
+      </section>
+
+      <section class="bg-white p-6 rounded-xl shadow-lg">
+        <h3 class="text-lg font-semibold text-gray-600 mb-3">Detalle de Venta</h3>
+        <div class="flex items-center mb-6">
+          <img [src]="currentImage" alt="{{ car?.brand || 'Auto' }}" class="w-24 h-16 object-cover rounded-md" />
+          <div class="ml-4">
+            <p class="text-lg font-semibold text-gray-600 mb-3">{{ car?.brand }} {{ car?.car_model }}</p>
+            <p class="text-gray-500">Desde ${{ car?.price || 'N/A' }}</p>
+          </div>
+        </div>
+
+        <h3 class="text-lg font-semibold text-gray-600 mb-3">Accesorios Seleccionados</h3>
+        <div class="flex flex-wrap gap-3 mb-6" *ngIf="selectedAccessories.length > 0">
+          <div *ngFor="let accessory of selectedAccessories" class="text-center">
+            <img [src]="accessory.image" alt="{{ accessory.name }}"
+              class="w-24 h-24 object-cover rounded-md font-medium" />
+            <p class="text-xs text-gray-600">{{ accessory.name }}</p>
+            <p class="text-xs text-gray-500">${{ accessory.price }}</p>
+          </div>
+        </div>
+        <p *ngIf="selectedAccessories.length === 0" class="text-gray-500">No se han seleccionado accesorios.</p>
+
+        <div class="border-t pt-4">
+          <p class="text-gray-700 flex justify-between">
+            <span>Plan de Financiamiento:</span>
+            <span class="font-semibold text-blue-600">{{ getQuoteDetails() }}</span>
+          </p>
+          <p class="text-gray-700 flex justify-between">
+            <span>Total Mensual:</span>
+            <span class="font-semibold text-blue-600">${{ totalMensual | number:'1.2-2' }}</span>
+          </p>
+          <p class="text-gray-500 flex justify-between">
+            <span>Cuota Mensual:</span>
+            <span>${{ cuotaMensual | number:'1.2-2' }}</span>
+          </p>
+          <p class="text-gray-500 flex justify-between">
+            <span>Seguro:</span>
+            <span>${{ seguroMensual | number:'1.2-2' }}</span>
+          </p>
+        </div>
+        <p class="text-gray-500 flex justify-between">
+          <span>Accesorios:</span>
+          <span>${{ totalAccesorios | number:'1.2-2' }}</span>
+        </p>
+        <p class="text-xs text-gray-500 mt-4">*Precios aproximados sujetos a cambios.</p>
+      </section>
+
+    </div>
+    <!-- Agregar esta sección al final de tu HTML -->
+    <div class="mt-8">
+      <h2 class="text-xl font-semibold text-gray-700 mb-6">Forma de Pago</h2>
+
+      <div class="flex gap-4 mb-6">
+        <button (click)="toggleFormaPago('tarjeta')" [ngClass]="{'bg-blue-600 text-white': formaPago === 'tarjeta'}"
+          class="px-4 py-2 rounded-md bg-gray-200 text-gray-700">
+          Tarjeta
+        </button>
+        <button (click)="toggleFormaPago('efectivo')" [ngClass]="{'bg-blue-600 text-white': formaPago === 'efectivo'}"
+          class="px-4 py-2 rounded-md bg-gray-200 text-gray-700">
+          Efectivo
+        </button>
+      </div>
+
+      <!-- Formulario de Tarjeta -->
+      <div *ngIf="formaPago === 'tarjeta'" class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="grid gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Número de Tarjeta</label>
+            <input type="text" [(ngModel)]="tarjetaForm.numero" (input)="formatearNumeroTarjeta($event)"
+              class="w-full px-3 py-2 border rounded-md" placeholder="1234 5678 9012 3456">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre en la Tarjeta</label>
+            <input type="text" [(ngModel)]="tarjetaForm.nombre" class="w-full px-3 py-2 border rounded-md"
+              placeholder="NOMBRE APELLIDO">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Expiración</label>
+              <input type="text" [(ngModel)]="tarjetaForm.expiracion" (input)="formatearExpiracion($event)"
+                class="w-full px-3 py-2 border rounded-md" placeholder="MM/YY">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+              <input type="text" [(ngModel)]="tarjetaForm.cvv" (input)="formatearCVV($event)"
+                class="w-full px-3 py-2 border rounded-md" placeholder="123">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de Efectivo -->
+      <div *ngIf="formaPago === 'efectivo'" class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="text-gray-600">
+          <p>Puede realizar su pago en efectivo en cualquiera de nuestras agencias:</p>
+          <ul class="list-disc ml-4 mt-2">
+            <li>Agencia Principal - Av. Principal #123</li>
+            <li>Sucursal Norte - Centro Comercial Norte</li>
+            <li>Sucursal Sur - Plaza del Sur</li>
+          </ul>
+          <p class="mt-4 text-sm text-gray-500">
+            * El pago debe realizarse dentro de las próximas 48 horas para mantener su reserva.
+          </p>
+        </div>
+      </div>
+      <!-- Modal de Confirmación -->
+      <div *ngIf="confirmationModalVisible"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-md shadow-lg max-w-sm w-full">
+          <h3 class="text-xl font-bold mb-4">Confirmar Compra</h3>
+          <p class="mb-4">¿Está seguro de que desea confirmar la compra?</p>
+          <div class="flex justify-end gap-4">
+            <button (click)="onCancelarVenta()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+              Cancelar
+            </button>
+            <button (click)="onConfirmarVenta()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay de Carga -->
+      <div *ngIf="loadingOverlayVisible"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="text-white text-xl">
+          Procesando compra...
+        </div>
+      </div>
+      <!-- Overlay de Mensaje de Compra Exitosa -->
+
+      <div class="mt-8">
+        <button (click)="mostrarConfirmacionVenta()"
+          class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+          Confirmar Venta
+        </button>
+
+      </div>
+    </div>
+  </div>
+</main>
